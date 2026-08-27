@@ -12,8 +12,10 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
+app.use(express.static(__dirname));
 app.use(express.json({ limit: "1mb" }));
 
 // Giới hạn CORS cho đúng domain website Thoong Lộc khi lên production
