@@ -266,7 +266,7 @@ function retrieveContext(query, topK = 4){
 // Chatbot KHÔNG được gọi thẳng https://api.anthropic.com từ trình duyệt
 // khi chạy ngoài claude.ai — sẽ không có API key và sẽ bị lỗi kết nối
 // giống như khi mở file .html trực tiếp trên máy (file://).
-const API_ENDPOINT = "https://thoongloc-chatbot-backend.onrender.com/api/chat";
+const API_ENDPOINT = "https://YOUR-BACKEND-DOMAIN.com/api/chat";
 
 // ---------------------------------------------------------------------
 // 3) STATE
@@ -425,9 +425,12 @@ async function sendMessage(text){
     hideTyping();
 
     if (data.error) {
+      const errMsg = typeof data.error === "string"
+        ? data.error
+        : (data.error.message || JSON.stringify(data.error));
       addMessage("bot", lang === "vi"
-        ? `Xin lỗi, có lỗi xảy ra: ${typeof data.error === "string" ? data.error : "vui lòng thử lại."}`
-        : `Sorry, something went wrong: ${typeof data.error === "string" ? data.error : "please try again."}`);
+        ? `Xin lỗi, có lỗi xảy ra: ${errMsg}`
+        : `Sorry, something went wrong: ${errMsg}`);
       addHandoverCard();
       setSending(false);
       return;
