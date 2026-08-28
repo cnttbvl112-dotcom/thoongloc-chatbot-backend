@@ -12,10 +12,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 
 const app = express();
-app.use(express.static(__dirname));
 app.use(express.json({ limit: "1mb" }));
 
 // Giới hạn CORS cho đúng domain website Thoong Lộc khi lên production
@@ -72,6 +70,12 @@ app.post("/api/chat", async (req, res) => {
     });
 
     const data = await response.json();
+
+    if (!response.ok || data.type === "error") {
+      console.error("Anthropic API trả lỗi:", JSON.stringify(data));
+      return res.status(response.status || 500).json(data);
+    }
+
     res.json(data);
   } catch (err) {
     console.error("Anthropic API error:", err);
